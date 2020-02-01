@@ -24,6 +24,7 @@ from persepolis.scripts import logger
 from PyQt5.QtGui import QIcon
 from functools import partial
 import os
+import base64
 
 # find file name and file size
 
@@ -288,12 +289,20 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
+    def parseThunder(self, url):
+        if url.startswith('thunder://'):
+            tmp = base64.b64decode(url[10:]).decode('utf-8')
+            return tmp[2:-2]
+        return url 
+                
+
 # enable when link_lineEdit is not empty and find size of file.
     def linkLineChanged(self, lineEdit):
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
         else:  # find file size
+            self.link_lineEdit.setText(self.parseThunder(self.link_lineEdit.text()))
 
             dict = {'link': str(self.link_lineEdit.text())}
 
