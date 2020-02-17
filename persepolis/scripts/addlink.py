@@ -292,7 +292,12 @@ class AddLinkWindow(AddLinkWindow_Ui):
     def parseThunder(self, url):
         if url.startswith('thunder://'):
             xxx = base64.b64decode(url[10:])
-            tmp = xxx.decode('GBK')
+
+            try:
+                tmp = xxx.decode('gbk')
+            except:
+                tmp = xxx.decode('utf-8','ignore')
+                 
             return tmp[2:-2]
         return url 
                 
